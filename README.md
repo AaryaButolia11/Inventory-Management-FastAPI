@@ -120,7 +120,7 @@ POST	/products	Add a new product
 PUT	/products	Update an existing product
 DELETE	/products	Delete a product by ID
 
-Screenshots
+## Screenshots
 
 <img width="1896" height="1007" alt="image" src="https://github.com/user-attachments/assets/ba0c6c6a-d2c8-4292-a424-ce2eae652a3f" />
 
