@@ -113,12 +113,8 @@ CRUD with SQLAlchemy: Creating, reading, updating, and deleting database records
 Automatic API docs: Available at /docs with Swagger UI
 
 ## API Endpoints
-Method-Endpoint-Description
-GET	/products	Get all products
-GET	/products/{id}	Get a product by ID
-POST	/products	Add a new product
-PUT	/products	Update an existing product
-DELETE	/products	Delete a product by ID
+
+<img width="837" height="301" alt="image" src="https://github.com/user-attachments/assets/517f6dc6-35e0-4f46-8b1b-424b8ab00da7" />
 
 ## Screenshots
 
