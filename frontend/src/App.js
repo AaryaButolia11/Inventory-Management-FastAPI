@@ -14,7 +14,7 @@ function App() {
     name: "",
     description: "",
     price: "",
-    quantity: "",
+    qty: "",
   });
   const [editId, setEditId] = useState(null);
   const [message, setMessage] = useState("");
@@ -85,24 +85,25 @@ function App() {
   // Derived list with filter and sorting
   const filteredProducts = useMemo(() => {
     let filtered = products;
-    
+
     // Apply filter
     const q = filter.trim().toLowerCase();
     if (q) {
-      filtered = products.filter((p) =>
-        String(p.id).includes(q) ||
-        p.name?.toLowerCase().includes(q) ||
-        p.description?.toLowerCase().includes(q)
+      filtered = products.filter(
+        (p) =>
+          String(p.id).includes(q) ||
+          p.name?.toLowerCase().includes(q) ||
+          p.description?.toLowerCase().includes(q)
       );
     }
-    
+
     // Apply sorting
     return filtered.sort((a, b) => {
       let aVal = a[sortField];
       let bVal = b[sortField];
-      
+
       // Handle numeric fields
-      if (sortField === "id" || sortField === "price" || sortField === "quantity") {
+      if (sortField === "id" || sortField === "price" || sortField === "qty") {
         aVal = Number(aVal);
         bVal = Number(bVal);
       } else {
@@ -110,7 +111,7 @@ function App() {
         aVal = String(aVal).toLowerCase();
         bVal = String(bVal).toLowerCase();
       }
-      
+
       if (aVal < bVal) return sortDirection === "asc" ? -1 : 1;
       if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
       return 0;
@@ -124,7 +125,7 @@ function App() {
 
   // Reset form
   const resetForm = () => {
-    setForm({ id: "", name: "", description: "", price: "", quantity: "" });
+    setForm({ id: "", name: "", description: "", price: "", qty: "" });
     setEditId(null);
   };
 
@@ -137,21 +138,24 @@ function App() {
     try {
       if (editId) {
         await api.put(`/products/${editId}`, {
-          ...form,
           id: Number(form.id),
+          name: form.name,
+          desc: form.description, // must match backend
           price: Number(form.price),
-          quantity: Number(form.quantity),
+          qty: Number(form.qty),
         });
         setMessage("Product updated successfully");
       } else {
         await api.post("/products/", {
-          ...form,
           id: Number(form.id),
+          name: form.name,
+          desc: form.description, // must match backend
           price: Number(form.price),
-          quantity: Number(form.quantity),
+          qty: Number(form.qty),
         });
         setMessage("Product created successfully");
       }
+
       resetForm();
       fetchProducts();
     } catch (err) {
@@ -167,7 +171,7 @@ function App() {
       name: product.name,
       description: product.description,
       price: product.price,
-      quantity: product.quantity,
+      qty: product.qty,
     });
     setEditId(product.id);
     setMessage("");
@@ -202,7 +206,11 @@ function App() {
           <h1>Telusko Trac</h1>
         </div>
         <div className="top-actions">
-          <button className="btn btn-light" onClick={fetchProducts} disabled={loading}>
+          <button
+            className="btn btn-light"
+            onClick={fetchProducts}
+            disabled={loading}
+          >
             Refresh
           </button>
         </div>
@@ -261,9 +269,9 @@ function App() {
               />
               <input
                 type="number"
-                name="quantity"
-                placeholder="Quantity"
-                value={form.quantity}
+                name="qty"
+                placeholder="qty"
+                value={form.qty}
                 onChange={handleChange}
                 required
               />
@@ -289,7 +297,7 @@ function App() {
             {message && <div className="success-msg">{message}</div>}
             {error && <div className="error-msg">{error}</div>}
           </div>
-          
+
           <TaglineSection />
 
           <div className="card list-card">
@@ -301,28 +309,36 @@ function App() {
                 <table className="product-table">
                   <thead>
                     <tr>
-                      <th 
-                        className={`sortable ${sortField === 'id' ? `sort-${sortDirection}` : ''}`}
-                        onClick={() => handleSort('id')}
+                      <th
+                        className={`sortable ${
+                          sortField === "id" ? `sort-${sortDirection}` : ""
+                        }`}
+                        onClick={() => handleSort("id")}
                       >
                         ID
                       </th>
-                      <th 
-                        className={`sortable ${sortField === 'name' ? `sort-${sortDirection}` : ''}`}
-                        onClick={() => handleSort('name')}
+                      <th
+                        className={`sortable ${
+                          sortField === "name" ? `sort-${sortDirection}` : ""
+                        }`}
+                        onClick={() => handleSort("name")}
                       >
                         Name
                       </th>
                       <th>Description</th>
-                      <th 
-                        className={`sortable ${sortField === 'price' ? `sort-${sortDirection}` : ''}`}
-                        onClick={() => handleSort('price')}
+                      <th
+                        className={`sortable ${
+                          sortField === "price" ? `sort-${sortDirection}` : ""
+                        }`}
+                        onClick={() => handleSort("price")}
                       >
                         Price
                       </th>
-                      <th 
-                        className={`sortable ${sortField === 'quantity' ? `sort-${sortDirection}` : ''}`}
-                        onClick={() => handleSort('quantity')}
+                      <th
+                        className={`sortable ${
+                          sortField === "qty" ? `sort-${sortDirection}` : ""
+                        }`}
+                        onClick={() => handleSort("qty")}
                       >
                         Quantity
                       </th>
@@ -334,17 +350,25 @@ function App() {
                       <tr key={p.id}>
                         <td>{p.id}</td>
                         <td className="name-cell">{p.name}</td>
-                        <td className="desc-cell" title={p.description}>{p.description}</td>
+                        <td className="desc-cell" title={p.description}>
+                          {p.description}
+                        </td>
                         <td className="price-cell">${currency(p.price)}</td>
                         <td>
-                          <span className="qty-badge">{p.quantity}</span>
+                          <span className="qty-badge">{p.qty}</span>
                         </td>
                         <td>
                           <div className="row-actions">
-                            <button className="btn btn-edit" onClick={() => handleEdit(p)}>
+                            <button
+                              className="btn btn-edit"
+                              onClick={() => handleEdit(p)}
+                            >
                               Edit
                             </button>
-                            <button className="btn btn-delete" onClick={() => handleDelete(p.id)}>
+                            <button
+                              className="btn btn-delete"
+                              onClick={() => handleDelete(p.id)}
+                            >
                               Delete
                             </button>
                           </div>
