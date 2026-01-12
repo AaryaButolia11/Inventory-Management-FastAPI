@@ -3,9 +3,8 @@
 A simple **Inventory Management Web App** built with **React** on the frontend and **FastAPI** on the backend.  
 This project was my first experience learning **FastAPI**, and it demonstrates basic CRUD operations (Create, Read, Update, Delete) for managing products.
 
-![App Screenshot](./screenshots/screenshot1.png)
-*Add your actual screenshots in the `screenshots/` folder*
-
+![App Screenshot](<img width="1542" height="892" alt="image" src="https://github.com/user-attachments/assets/6ff4a9bb-38a0-4748-9c51-e0f3b7a3cc4b" />
+)
 ---
 
 ## Table of Contents
